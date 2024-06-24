@@ -13,5 +13,6 @@ func SetupRoutes(router *gin.Engine) {
 		receiptRoutes.GET("", controllers.GetReceipts)
 		receiptRoutes.GET(":id", controllers.GetReceiptById)
 		receiptRoutes.GET(":id/points", controllers.GetPoints)
+		receiptRoutes.PUT("", controllers.UpdateReceipt)
 	}
 }

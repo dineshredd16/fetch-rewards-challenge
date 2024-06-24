@@ -44,7 +44,7 @@ func CalculatePoints (receipt models.Receipt) int64{
 	}
 
 	purchaseTime, err := time.Parse("15:04", receipt.PurchaseTime)
-	if err == nil && purchaseTime.Hour() >= 14 && purchaseTime.Hour() < 16 {
+	if err == nil && purchaseTime.Hour() > 14 && purchaseTime.Hour() < 16 {
 		points += 10
 	}
 

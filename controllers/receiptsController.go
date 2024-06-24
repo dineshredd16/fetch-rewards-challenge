@@ -44,6 +44,7 @@ func GetPoints (c *gin.Context) {
 	}
 }
 
+
 func GetReceipts (c *gin.Context) {
 	models.InMemoryDatabase.Lock()
 	defer models.InMemoryDatabase.Unlock()
@@ -54,6 +55,29 @@ func GetReceipts (c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"Status": "Success", "Message": " Fetched Receipts Succesfully ", "Data" : receipts, "Error": "",
 	})
+}
+
+func UpdateReceipt (c *gin.Context) {
+	var receipt models.Receipt
+	err := c.ShouldBindJSON(&receipt)
+	if (err != nil || services.CheckMissingReceiptFields(receipt)) {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"Status": "Failure", "Message": "Bad Params", "Data" : "", "Error": err.Error(),
+		})
+	} else if _, exists := models.InMemoryDatabase.Receipts[receipt.Id]; !exists{
+		c.JSON(http.StatusNotFound, gin.H{
+			"Status": "Failure", "Message": "Receipt ID not present", "Data" : "", "Error": "",
+		})
+	} else {
+		models.InMemoryDatabase.Receipts[receipt.Id] = receipt
+		c.JSON(http.StatusOK, gin.H{
+			"Status": "Success", "Message": " Updated Receipt Succesfully ", "Data" : receipt, "Error": "",
+		})
+	}
+}
+
+func AttachUserToReceipt () {
+
 }
 
 func GetReceiptById (c *gin.Context) {
